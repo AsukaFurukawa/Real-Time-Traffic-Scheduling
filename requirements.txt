@@ -1,0 +1,50 @@
+# Core Dependencies
+python-version>=3.9
+
+# GTFS & Real-time Data Processing
+gtfs-realtime-bindings==1.0.0
+psycopg2-binary==2.9.10
+pyproj==3.7.1
+requests==2.32.5
+shapely==2.0.6
+
+# Stream Processing & Real-time
+kafka-python==2.0.2
+confluent-kafka==2.5.3
+redis==5.0.1
+schedule==1.2.0
+
+# OR Optimization
+pulp==2.9.0
+scipy==1.14.1
+numpy==1.26.4
+ortools==9.11.4210
+
+# Synthetic Data Generation
+faker==30.8.2
+pandas==2.2.3
+sdv==1.16.2
+
+# Visualization & Dashboard
+streamlit==1.40.2
+plotly==5.24.1
+folium==0.18.0
+altair==5.4.1
+pydeck==0.9.1
+
+# Data Storage & Processing
+sqlalchemy==2.0.36
+geopandas==1.0.1
+h5py==3.12.1
+
+# API & Web
+fastapi==0.115.6
+uvicorn==0.32.1
+websockets==14.1
+
+# Utilities
+python-dotenv==1.0.1
+pyyaml==6.0.2
+loguru==0.7.3
+tqdm==4.67.1
+

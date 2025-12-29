@@ -1,0 +1,9 @@
+stop_id,stop_name,stop_lat,stop_lon
+stop_1,Kempegowda Bus Station,12.9716,77.5946
+stop_2,Majestic Metro,12.977,77.5773
+stop_3,Shivajinagar,12.9822,77.6033
+stop_4,MG Road,12.9759,77.6074
+stop_5,Koramangala,12.9352,77.6245
+stop_6,Electronic City,12.8456,77.6606
+stop_7,Whitefield,12.9698,77.7499
+stop_8,Hebbal,13.0358,77.5971

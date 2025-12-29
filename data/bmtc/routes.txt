@@ -1,0 +1,6 @@
+route_id,route_short_name,route_long_name,route_type,route_color
+335E,335E,Kengeri to Shivajinagar,3,FF0000
+G4,G4,Banashankari to Tin Factory,3,00FF00
+KBS-1,KBS-1,Kempegowda Bus Station Circle,3,0000FF
+500K,500K,Kathriguppe to Shivajinagar,3,FFFF00
+AC-65,AC-65,Kempegowda to Airport,3,00FFFF
