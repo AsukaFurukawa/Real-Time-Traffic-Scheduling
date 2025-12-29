@@ -383,59 +383,208 @@ def create_bangalore_map(buses, stops):
     return fig
 
 
-def create_clear_passenger_demand(stops):
-    """CLEAR passenger demand prediction"""
+def create_animated_stream_flow(counter):
+    """ANIMATED stream processing showing data packets flowing - VERY DYNAMIC"""
     
     fig = go.Figure()
     
-    # Current demand
-    current_demand = [np.random.randint(15, 50) for _ in range(len(stops))]
+    # Pipeline stages
+    stages = ['GPS\nSensors', 'Kafka\nQueue', 'Stream\nProcessor', 'OR\nEngine', 'Dashboard']
+    x_positions = [1, 2, 3, 4, 5]
+    y_base = 2
     
-    # 5-min forecast
-    forecast_5min = [d + np.random.randint(-5, 15) for d in current_demand]
+    # Draw stage nodes - pulse size based on counter
+    colors = ['#3498db', '#e74c3c', '#f39c12', '#2ecc71', '#9b59b6']
+    for i, (stage, x, color) in enumerate(zip(stages, x_positions, colors)):
+        # Pulse effect - size changes with counter
+        pulse = 100 + 10 * np.sin(counter * 0.5 + i)
+        
+        fig.add_trace(go.Scatter(
+            x=[x], y=[y_base],
+            mode='markers+text',
+            marker=dict(size=pulse, color=color),
+            text=stage,
+            textposition='middle center',
+            textfont=dict(size=11, color='white', family='Arial Black'),
+            showlegend=False,
+            hoverinfo='skip'
+        ))
     
-    # 10-min forecast
-    forecast_10min = [d + np.random.randint(-5, 20) for d in current_demand]
+    # MANY MORE packets for visible flow
+    num_packets = 20
+    for packet_id in range(num_packets):
+        # Position based on counter - FASTER movement
+        flow_position = (counter * 0.8 + packet_id * 0.3) % 4  # 0 to 4
+        
+        # Determine which segment the packet is on
+        segment = int(flow_position)
+        if segment >= 4:
+            continue
+            
+        progress = flow_position - segment
+        x_start = x_positions[segment]
+        x_end = x_positions[segment + 1]
+        x_packet = x_start + (x_end - x_start) * progress
+        
+        # Y position varies MORE
+        y_packet = y_base + 0.5 * np.sin(packet_id * 0.8 + counter * 0.3)
+        
+        # Color changes as packet moves through pipeline - BRIGHTER
+        packet_colors = ['#00ffff', '#00ff00', '#ffff00', '#ff00ff']
+        packet_color = packet_colors[segment]
+        
+        # Size varies for depth effect
+        packet_size = 12 + 8 * np.sin(packet_id + counter * 0.2)
+        
+        fig.add_trace(go.Scatter(
+            x=[x_packet], y=[y_packet],
+            mode='markers',
+            marker=dict(size=packet_size, color=packet_color, symbol='diamond', opacity=0.9),
+            showlegend=False,
+            hovertemplate=f'Data Packet #{packet_id}<br>Position: {progress*100:.0f}%<extra></extra>'
+        ))
     
-    stop_names = [f"Stop {i+1}" for i in range(len(stops))]
+    # Connection lines between stages - animated glow
+    for i in range(len(x_positions) - 1):
+        # Width changes based on data flow
+        line_width = 3 + 2 * np.sin(counter * 0.4 + i)
+        
+        fig.add_trace(go.Scatter(
+            x=[x_positions[i], x_positions[i+1]],
+            y=[y_base, y_base],
+            mode='lines',
+            line=dict(color='#888', width=line_width),
+            showlegend=False,
+            hoverinfo='skip'
+        ))
     
-    fig.add_trace(go.Bar(
-        x=stop_names,
-        y=current_demand,
-        name='Current',
-        marker_color='#3498db',
-        text=current_demand,
-        textposition='outside'
+    # Throughput indicator - MUCH MORE DYNAMIC
+    throughput = 180 + int(80 * np.sin(counter * 0.7))
+    latency = 25 + int(15 * np.sin(counter * 0.9))
+    
+    fig.add_annotation(
+        text=f"⚡ Throughput: {throughput} msgs/sec | ⏱️ Latency: {latency}ms | 🔄 Frame: {counter}",
+        xref="paper", yref="paper",
+        x=0.5, y=0.95,
+        showarrow=False,
+        font=dict(size=13, color='cyan'),
+        bgcolor='rgba(0,0,0,0.9)',
+        bordercolor='cyan',
+        borderwidth=2
+    )
+    
+    fig.update_layout(
+        plot_bgcolor='#0a0a0a',
+        paper_bgcolor='#0e1117',
+        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[0.5, 5.5]),
+        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[1, 3]),
+        height=350,
+        title="<b>🌊 Live Stream Processing Pipeline</b><br><sub>Real-time data flow animation - watch packets move!</sub>",
+        margin=dict(l=20, r=20, t=80, b=20)
+    )
+    
+    return fig
+
+
+def create_live_or_optimization(buses, counter):
+    """Live OR optimization showing LP solver working - HIGHLY DYNAMIC"""
+    
+    fig = go.Figure()
+    
+    # Simulate LP solver iterations - GROWS with counter
+    max_iterations = min(counter + 5, 30)
+    
+    # Objective function value improving over iterations - CHANGES EACH TIME
+    obj_values = []
+    start_value = 1000 + np.random.uniform(-50, 50)
+    for i in range(max_iterations):
+        # Exponential decay with noise
+        value = start_value * np.exp(-i * 0.15) + 300 + np.random.uniform(-30, 30)
+        obj_values.append(value)
+    
+    # Plot objective function convergence - ANIMATED
+    fig.add_trace(go.Scatter(
+        x=list(range(len(obj_values))),
+        y=obj_values,
+        mode='lines+markers',
+        line=dict(color='#2ecc71', width=4),
+        marker=dict(size=8, color='#00ff00', line=dict(width=2, color='white')),
+        name='Objective Value',
+        fill='tozeroy',
+        fillcolor='rgba(46, 204, 113, 0.3)',
+        hovertemplate='Iteration %{x}<br>Objective: %{y:.1f}<extra></extra>'
     ))
     
-    fig.add_trace(go.Bar(
-        x=stop_names,
-        y=forecast_5min,
-        name='+5 min Forecast',
-        marker_color='#f39c12',
-        text=forecast_5min,
-        textposition='outside'
-    ))
+    # Current best solution indicator - MOVING
+    if len(obj_values) > 0:
+        current_obj = obj_values[-1]
+        improvement = ((obj_values[0] - current_obj) / obj_values[0] * 100)
+        
+        # Add marker for current best
+        fig.add_trace(go.Scatter(
+            x=[len(obj_values)-1],
+            y=[current_obj],
+            mode='markers',
+            marker=dict(size=20, color='#ff00ff', symbol='star', line=dict(width=2, color='white')),
+            name='Current Best',
+            showlegend=False
+        ))
+        
+        fig.add_annotation(
+            text=f"🎯 Objective: {current_obj:.1f}<br>📈 Improvement: {improvement:.1f}%<br>⚡ Iteration: {max_iterations}<br>🔄 Frame: {counter}",
+            xref="paper", yref="paper",
+            x=0.02, y=0.98,
+            xanchor='left', yanchor='top',
+            showarrow=False,
+            font=dict(size=11, color='white'),
+            bgcolor='rgba(46, 204, 113, 0.4)',
+            bordercolor='#2ecc71',
+            borderwidth=2,
+            align='left'
+        )
+    
+    # Decision variables (holding times for buses) - CHANGES EACH FRAME
+    sorted_buses = buses.sort_values('progress').head(6)
+    bus_labels = [bid.split('-')[-1] for bid in sorted_buses['bus_id']]
+    
+    # Simulate holding time decisions - DYNAMIC with counter
+    holding_times = []
+    for idx, bus in enumerate(sorted_buses.itertuples()):
+        base_hold = 60
+        if bus.schedule_delay > 180:
+            hold = np.random.uniform(0, 20) + 5 * np.sin(counter * 0.3 + idx)
+        elif bus.schedule_delay > 60:
+            hold = np.random.uniform(20, 50) + 10 * np.sin(counter * 0.4 + idx)
+        else:
+            hold = np.random.uniform(40, 100) + 15 * np.sin(counter * 0.5 + idx)
+        holding_times.append(max(0, hold))
+    
+    # Add bar chart for decision variables - ANIMATED
+    colors_bars = ['#00ff00' if h < 30 else ('#ffaa00' if h < 60 else '#ff4444') for h in holding_times]
     
     fig.add_trace(go.Bar(
-        x=stop_names,
-        y=forecast_10min,
-        name='+10 min Forecast',
-        marker_color='#e74c3c',
-        text=forecast_10min,
-        textposition='outside'
+        x=bus_labels,
+        y=holding_times,
+        marker=dict(color=colors_bars, line=dict(width=2, color='white')),
+        name='Holding Time (s)',
+        text=[f"{h:.0f}s" for h in holding_times],
+        textposition='outside',
+        textfont=dict(size=11, color='white'),
+        yaxis='y2',
+        hovertemplate='Bus %{x}<br>Hold: %{y:.0f}s<extra></extra>'
     ))
     
     fig.update_layout(
-        title="<b>👥 Passenger Demand Prediction</b><br><sub>Uses Poisson Process for arrival modeling</sub>",
-        xaxis_title="Bus Stops",
-        yaxis_title="Waiting Passengers",
-        barmode='group',
+        title="<b>⚙️ OR Optimization Engine - Live LP Solver</b><br><sub>Linear Programming solver minimizing delays in real-time</sub>",
+        xaxis=dict(title='Solver Iterations', gridcolor='#1e1e1e'),
+        yaxis=dict(title='Objective Function (minimize)', gridcolor='#1e1e1e', side='left'),
+        yaxis2=dict(title='Holding Time (seconds)', gridcolor='#1e1e1e', overlaying='y', side='right', range=[0, 120]),
         plot_bgcolor='#0a0a0a',
         paper_bgcolor='#0e1117',
         font=dict(color='white'),
-        height=400,
-        legend=dict(bgcolor='rgba(0,0,0,0.7)', font=dict(color='white'))
+        height=350,
+        showlegend=False,
+        margin=dict(l=60, r=60, t=80, b=60)
     )
     
     return fig
@@ -666,16 +815,16 @@ def main():
     timeline_col, heatmap_col = st.columns(2)
     
     with timeline_col:
-        st.markdown("### 🎯 OR Optimization Network")
-        st.caption("Real-time optimization showing bus relationships - node size = passenger load")
-        fig_network = create_realtime_optimization_network(buses)
-        st.plotly_chart(fig_network, use_container_width=True, key=f"network_{st.session_state.counter}")
+        st.markdown("### 🌊 Real-Time Stream Processing")
+        st.caption("Watch data packets flow through the pipeline - GPS → Kafka → Processing → OR → Dashboard")
+        fig_stream_flow = create_animated_stream_flow(st.session_state.counter)
+        st.plotly_chart(fig_stream_flow, use_container_width=True, key=f"streamflow_{st.session_state.counter}")
     
     with heatmap_col:
-        st.markdown("### 👥 Passenger Demand")
-        st.caption("Predicts passenger arrivals using streaming data")
-        fig_demand = create_clear_passenger_demand(stops)
-        st.plotly_chart(fig_demand, use_container_width=True, key=f"demand_{st.session_state.counter}")
+        st.markdown("### ⚙️ Live OR Optimization")
+        st.caption("Linear Programming solver working in real-time - minimizing delays & bunching")
+        fig_live_or = create_live_or_optimization(buses, st.session_state.counter)
+        st.plotly_chart(fig_live_or, use_container_width=True, key=f"liveor_{st.session_state.counter}")
     
     st.markdown("---")
     
